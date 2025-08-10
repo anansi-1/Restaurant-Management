@@ -1,18 +1,25 @@
 package main
 
 import (
+	"log"
 	"os"
 	"restaurant-management/database"
-	"restaurant-management/routes"
 	"restaurant-management/middleware"
+	"restaurant-management/routes"
 
-	"go.mongodb.org/mongo-driver/mongo"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var foodCollection *mongo.Collection = database.OpenCollection(database.Client,"food")
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Could not load .env file")
+	}
 
 	port := os.Getenv("PORT")
 
