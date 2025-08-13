@@ -122,7 +122,7 @@ func UpdateMenu() gin.HandlerFunc {
 		var menu models.Menu
 
 		if err := c.BindJSON(&menu); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body: " + err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request: " + err.Error()})
 			return
 		}
 
@@ -141,10 +141,10 @@ func UpdateMenu() gin.HandlerFunc {
 		}
 
 		if menu.StartDate != nil {
-			updateObj = append(updateObj, bson.E{Key: "start_date", Value: menu.StartDate})
+			updateObj = append(updateObj, bson.E{Key: "start_date", Value: *menu.StartDate})
 		}
 		if menu.EndDate != nil {
-			updateObj = append(updateObj, bson.E{Key: "end_date", Value: menu.EndDate})
+			updateObj = append(updateObj, bson.E{Key: "end_date", Value: *menu.EndDate})
 		}
 		if menu.Name != "" {
 			updateObj = append(updateObj, bson.E{Key: "name", Value: menu.Name})
