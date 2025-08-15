@@ -133,7 +133,7 @@ func CreateOrder() gin.HandlerFunc {
 
 	}
 }
-                 
+
 // PATCH orders/:order_id"
 func UpdateOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -185,13 +185,27 @@ func UpdateOrder() gin.HandlerFunc {
 
 			c.JSON(
 				http.StatusInternalServerError,
-				gin.H{"error":"Failed to update order" + err.Error()},
+				gin.H{"error": "Failed to update order" + err.Error()},
 			)
 			return
-		}     
+		}
 
-		c.JSON(http.StatusOK,result)
+		c.JSON(http.StatusOK, result)
 	}
 }
+func OrderItemOrderCreator(order models.Order) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
+	order.CreatedAt = time.Now().UTC()
+	order.UpdatedAt = time.Now().UTC()
+	order.ID = primitive.NewObjectID()
+	order.OrderID = order.ID.Hex()
 
+	_, err := orderCollection.InsertOne(ctx, order)
+	if err != nil {
+		return "", err
+	}
+
+	return order.OrderID, nil
+}

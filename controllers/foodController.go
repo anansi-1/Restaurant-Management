@@ -106,6 +106,10 @@ func GetFood() gin.HandlerFunc {
 		defer cancel()
 
 		foodID := c.Param("food_id")
+		if foodID == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "order_id is required"})
+			return
+		}
 
 		var food models.Food
 
